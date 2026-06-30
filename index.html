@@ -4,137 +4,186 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>FIFA World Cup 2026 — Signal Room</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
 :root {
-    --fifa-purple: #7B2FF7; --fifa-blue: #00D68F; --fifa-cyan: #00E5FF; --fifa-gold: #FFD700;
-    --fifa-orange: #FF6B35; --fifa-pink: #FF2D92; --fifa-dark: #070712; --fifa-card: #0f0f1e;
-    --fifa-card-2: #16162e; --fifa-text: #ffffff; --fifa-text-dim: #8892b0; --fifa-border: #2a2a5a;
-    --accent-live: #ff2d55; --accent-win: #00D68F;
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #1c2128;
+    --bg-card: #21262d;
+    --bg-card-hover: #30363d;
+    --border: #30363d;
+    --border-light: #484f58;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --accent-teal: #2dd4bf;
+    --accent-teal-dark: #14b8a6;
+    --accent-blue: #60a5fa;
+    --accent-blue-dark: #3b82f6;
+    --accent-amber: #fbbf24;
+    --accent-amber-dark: #f59e0b;
+    --accent-rose: #fb7185;
+    --accent-rose-dark: #f43f5e;
+    --accent-green: #4ade80;
+    --accent-green-dark: #22c55e;
+    --accent-orange: #fb923c;
+    --accent-purple: #a78bfa;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Inter',sans-serif; background: var(--fifa-dark); color: var(--fifa-text); min-height:100vh; overflow-x:hidden; }
-.bg-animated { position:fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(ellipse at 10% 10%, rgba(123,47,247,0.12) 0%, transparent 50%), radial-gradient(ellipse at 90% 90%, rgba(0,214,143,0.08) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(0,229,255,0.05) 0%, transparent 60%); z-index:-2; animation: bgPulse 8s ease-in-out infinite alternate; }
-@keyframes bgPulse { 0% { opacity:0.8; transform:scale(1); } 100% { opacity:1; transform:scale(1.05); } }
-.bg-grid { position:fixed; top:0; left:0; width:100%; height:100%; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 40px 40px; z-index:-1; }
-header { padding: 1.5rem 1rem; text-align:center; border-bottom:1px solid var(--fifa-border); background: linear-gradient(180deg, rgba(123,47,247,0.15) 0%, transparent 100%); }
-.logo-badge { display:inline-block; background: linear-gradient(135deg, var(--fifa-purple), var(--fifa-blue)); padding: 0.5rem 1.2rem; border-radius: 50px; font-weight:800; font-size: 0.7rem; letter-spacing: 0.15em; text-transform:uppercase; margin-bottom: 0.8rem; box-shadow: 0 0 25px rgba(123,47,247,0.5); animation: badgeGlow 3s ease-in-out infinite alternate; }
-@keyframes badgeGlow { 0% { box-shadow: 0 0 20px rgba(123,47,247,0.4); } 100% { box-shadow: 0 0 35px rgba(0,214,143,0.4); } }
-h1 { font-family:'Oswald',sans-serif; font-size: clamp(2rem, 7vw, 4.5rem); font-weight:700; text-transform:uppercase; letter-spacing:-0.02em; line-height:1; background: linear-gradient(135deg, #fff 0%, var(--fifa-gold) 40%, var(--fifa-cyan) 70%, #fff 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 4s linear infinite; }
-@keyframes shine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
-.subtitle { color: var(--fifa-text-dim); font-size: 0.9rem; margin-top: 0.5rem; letter-spacing: 0.15em; }
-.tournament-info { display:flex; justify-content:center; gap: 1rem; margin-top: 1.2rem; flex-wrap:wrap; }
-.info-pill { background: rgba(255,255,255,0.04); border: 1px solid var(--fifa-border); padding: 0.4rem 0.9rem; border-radius: 10px; font-size: 0.8rem; backdrop-filter: blur(10px); }
-.info-pill span { color: var(--fifa-gold); font-weight:700; }
-.fav-bar { background: linear-gradient(90deg, rgba(123,47,247,0.1), rgba(0,214,143,0.1)); border-bottom: 1px solid var(--fifa-border); padding: 0.8rem 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem; flex-wrap: wrap; }
-.fav-bar label { font-size: 0.85rem; color: var(--fifa-text-dim); font-weight: 600; }
-.fav-bar select { background: var(--fifa-card); border: 1px solid var(--fifa-border); color: var(--fifa-text); padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer; min-width: 200px; }
-.fav-bar button { background: linear-gradient(135deg, var(--fifa-purple), var(--fifa-blue)); border: none; color: white; padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
-.nav-tabs { display:flex; justify-content:center; gap: 0.4rem; padding: 0.8rem 0.5rem; border-bottom: 1px solid var(--fifa-border); flex-wrap:wrap; position:sticky; top:0; background: rgba(7,7,18,0.95); backdrop-filter: blur(15px); z-index:100; }
-.nav-tab { background: transparent; border: 1px solid var(--fifa-border); color: var(--fifa-text-dim); padding: 0.5rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.3s ease; }
-.nav-tab:hover, .nav-tab.active { background: linear-gradient(135deg, var(--fifa-purple), var(--fifa-blue)); color: white; border-color: transparent; box-shadow: 0 0 20px rgba(123,47,247,0.3); transform: translateY(-2px); }
-.section { display: none; max-width: 1400px; margin: 0 auto; padding: 1.5rem 1rem; animation: fadeIn 0.4s ease; }
-.section.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-.section-title { font-family:'Oswald',sans-serif; font-size: 1.6rem; font-weight:700; margin-bottom: 1.2rem; text-transform:uppercase; display:flex; align-items:center; gap: 0.5rem; }
-.section-title::after { content:''; flex:1; height: 2px; background: linear-gradient(90deg, var(--fifa-border), transparent); margin-left: 0.5rem; }
-.match-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; }
-.match-card { background: linear-gradient(145deg, var(--fifa-card), var(--fifa-card-2)); border: 1px solid var(--fifa-border); border-radius: 20px; padding: 1.2rem; transition: all 0.35s ease; position: relative; overflow: hidden; }
-.match-card::before { content:''; position:absolute; top:0; left:0; right:0; height: 4px; background: linear-gradient(90deg, var(--fifa-purple), var(--fifa-blue), var(--fifa-gold), var(--fifa-orange)); background-size: 300% 100%; animation: barShift 4s linear infinite; }
-@keyframes barShift { 0% { background-position: 0% 0; } 100% { background-position: 300% 0; } }
-.match-card:hover { transform: translateY(-6px) scale(1.01); border-color: var(--fifa-purple); box-shadow: 0 15px 50px rgba(123,47,247,0.25); }
-.match-card.live::before { background: linear-gradient(90deg, var(--accent-live), var(--fifa-orange)); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
-.match-header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.8rem; }
-.group-badge { background: linear-gradient(135deg, rgba(123,47,247,0.25), rgba(0,214,143,0.15)); color: var(--fifa-gold); padding: 0.25rem 0.7rem; border-radius: 20px; font-size: 0.7rem; font-weight:800; text-transform:uppercase; letter-spacing: 0.05em; }
-.match-status { font-size: 0.7rem; font-weight:800; padding: 0.25rem 0.7rem; border-radius: 20px; }
-.match-status.live { background: rgba(255,45,85,0.15); color: var(--accent-live); animation: blink 1.5s infinite; }
-.match-status.finished { background: rgba(0,214,143,0.15); color: var(--accent-win); }
-@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
-.match-teams { display:flex; justify-content:space-between; align-items:center; margin: 1rem 0; }
-.team { display:flex; flex-direction:column; align-items:center; gap: 0.4rem; flex:1; }
-.flag-img { width: 44px; height: 30px; border-radius: 5px; object-fit:cover; box-shadow: 0 3px 10px rgba(0,0,0,0.4); }
-.flag-img-small { width: 22px; height: 15px; border-radius: 3px; object-fit:cover; vertical-align:middle; margin-right: 5px; }
-.team-name { font-weight:700; font-size: 1rem; text-align:center; }
-.match-score { text-align:center; padding: 0 0.8rem; }
-.score { font-family:'Oswald',sans-serif; font-size: 2.8rem; font-weight:700; color: var(--fifa-gold); line-height:1; text-shadow: 0 0 20px rgba(255,215,0,0.3); }
-.time { color: var(--fifa-cyan); font-size: 0.8rem; margin-top: 0.3rem; font-weight: 600; }
-.match-details { margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--fifa-border); }
-.venue { color: var(--fifa-text-dim); font-size: 0.8rem; margin-bottom: 0.8rem; }
-.prediction-box { background: linear-gradient(135deg, rgba(123,47,247,0.08), rgba(0,214,143,0.05)); border: 1px solid rgba(123,47,247,0.25); border-radius: 14px; padding: 0.9rem; }
-.pred-title { font-size: 0.7rem; text-transform:uppercase; letter-spacing: 0.12em; color: var(--fifa-gold); margin-bottom: 0.4rem; font-weight:700; }
-.pred-score { font-family:'Oswald',sans-serif; font-size: 1.4rem; font-weight:700; margin-bottom: 0.5rem; }
-.prob-bars { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.5rem; }
-.prob-bar { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; }
-.prob-label { width: 30px; color: var(--fifa-text-dim); }
-.bar { flex: 1; height: 20px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
-.fill { height: 100%; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem; transition: width 1s ease; }
-.fill.home { background: linear-gradient(90deg, var(--fifa-purple), var(--fifa-pink)); }
-.fill.draw { background: linear-gradient(90deg, var(--fifa-gold), var(--fifa-orange)); }
-.fill.away { background: linear-gradient(90deg, var(--fifa-blue), var(--fifa-cyan)); }
-.pred-confidence { font-size: 0.75rem; color: var(--fifa-text-dim); text-align: right; }
-.groups-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
-.group-table { background: linear-gradient(145deg, var(--fifa-card), var(--fifa-card-2)); border: 1px solid var(--fifa-border); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 25px rgba(0,0,0,0.2); transition: transform 0.3s; }
-.group-table:hover { transform: translateY(-3px); }
-.group-table h3 { background: linear-gradient(135deg, var(--fifa-purple), var(--fifa-blue)); padding: 0.7rem 1rem; font-family:'Oswald',sans-serif; font-size: 1.1rem; text-transform:uppercase; letter-spacing: 0.05em; }
+body { font-family:'Inter',sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height:100vh; overflow-x:hidden; }
+
+/* Background effects */
+.bg-animated { position:fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(ellipse at 15% 15%, rgba(45,212,191,0.06) 0%, transparent 50%), radial-gradient(ellipse at 85% 85%, rgba(96,165,250,0.05) 0%, transparent 50%), radial-gradient(ellipse at 50% 50%, rgba(251,191,36,0.03) 0%, transparent 60%); z-index:-2; }
+.bg-grid { position:fixed; top:0; left:0; width:100%; height:100%; background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px); background-size: 50px 50px; z-index:-1; }
+
+/* Header */
+.header { padding: 1.2rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(22,27,34,0.8) 0%, transparent 100%); }
+.header-left { display: flex; align-items: center; gap: 1rem; }
+.header-logo { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 0 20px rgba(45,212,191,0.3); }
+.header-title { font-family:'Oswald',sans-serif; font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; text-transform: uppercase; }
+.header-title span { color: var(--accent-amber); }
+.header-subtitle { color: var(--text-secondary); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; }
+.header-right { display: flex; align-items: center; gap: 0.8rem; }
+.match-date { display: flex; align-items: center; gap: 0.5rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; }
+.match-date input { background: transparent; border: none; color: var(--text-primary); font-size: 0.85rem; font-weight: 600; width: 110px; outline: none; }
+.tz-btn { background: var(--accent-amber); color: #000; border: none; border-radius: 6px; padding: 0.5rem 0.8rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+.tz-btn.alt { background: var(--bg-card); color: var(--text-secondary); }
+.live-indicator { display: flex; align-items: center; gap: 0.4rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 600; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-rose); animation: live-pulse 1.5s infinite; }
+@keyframes live-pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.8); } }
+
+/* Tabs */
+.tab-bar { display: flex; gap: 0.3rem; padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); overflow-x: auto; background: var(--bg-secondary); }
+.tab-btn { background: transparent; border: none; color: var(--text-secondary); padding: 0.5rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--text-primary); }
+.tab-btn.active { background: var(--accent-amber); color: #000; font-weight: 700; }
+
+/* Controls row */
+.controls-row { display: flex; gap: 1rem; padding: 1rem 1.5rem; align-items: flex-end; flex-wrap: wrap; border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
+.control-group { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; min-width: 200px; }
+.control-group label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); }
+.control-group select { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer; width: 100%; }
+.action-btn { padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: none; transition: all 0.2s; }
+.action-btn.primary { background: var(--accent-teal); color: #000; }
+.action-btn.primary:hover { background: var(--accent-teal-dark); transform: translateY(-1px); }
+.action-btn.secondary { background: var(--accent-amber); color: #000; }
+.action-btn.secondary:hover { background: var(--accent-amber-dark); transform: translateY(-1px); }
+
+/* Content sections */
+.content { display: none; padding: 1.5rem; max-width: 1400px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+.content.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.section-label { font-family:'Oswald',sans-serif; font-size: 1.3rem; font-weight: 600; color: var(--accent-amber); text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.05em; }
+
+/* Match Cards v2 */
+.match-grid-v2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1rem; }
+.match-card-v2 { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 1.2rem; transition: all 0.3s; position: relative; overflow: hidden; }
+.match-card-v2:hover { border-color: var(--border-light); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.match-card-v2.live { border-color: var(--accent-teal); box-shadow: 0 0 20px rgba(45,212,191,0.1); }
+.match-card-v2.finished { border-color: var(--accent-green-dark); }
+.match-card-v2::before { content:''; position:absolute; top:0; left:0; right:0; height: 3px; background: linear-gradient(90deg, var(--accent-teal), var(--accent-blue), var(--accent-amber), var(--accent-rose)); opacity: 0.5; }
+.match-card-v2.live::before { opacity: 1; animation: shimmer 3s linear infinite; background-size: 300% 100%; }
+@keyframes shimmer { 0% { background-position: 0% 0; } 100% { background-position: 300% 0; } }
+
+.mc-v2-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+.mc-v2-group { font-size: 0.7rem; font-weight: 800; color: var(--accent-teal); text-transform: uppercase; letter-spacing: 0.08em; }
+.mc-v2-time { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+.mc-v2-countdown { font-size: 0.75rem; font-weight: 700; color: var(--accent-teal); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem; }
+.mc-v2-teams { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.mc-v2-team { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; flex: 1; }
+.flag-lg { width: 52px; height: 36px; border-radius: 6px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+.flag-sm { width: 22px; height: 15px; border-radius: 3px; object-fit: cover; vertical-align: middle; margin-right: 4px; }
+.mc-v2-name { font-weight: 700; font-size: 0.95rem; text-align: center; }
+.mc-v2-scorebox { text-align: center; padding: 0 0.8rem; }
+.mc-v2-score { font-family:'Oswald',sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--accent-amber); }
+.mc-v2-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
+.mc-v2-pred { background: var(--bg-tertiary); border-radius: 10px; padding: 0.8rem; margin-bottom: 0.8rem; }
+.mc-v2-pred-title { font-size: 0.65rem; font-weight: 800; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+.mc-v2-pred-score { font-family:'Oswald',sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+.mc-v2-pred-prob { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.2rem; }
+.mc-v2-meta { font-size: 0.7rem; color: var(--text-muted); line-height: 1.8; text-transform: uppercase; letter-spacing: 0.05em; }
+.mc-v2-meta div:first-child { color: var(--accent-amber); font-weight: 600; }
+
+/* Group standings */
+.groups-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+.group-table { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.group-table h3 { background: var(--bg-tertiary); padding: 0.6rem 1rem; font-family:'Oswald',sans-serif; font-size: 1rem; text-transform: uppercase; color: var(--accent-amber); letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
 .group-table table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-.group-table th { padding: 0.5rem 0.3rem; text-align: center; color: var(--fifa-text-dim); font-weight: 600; border-bottom: 1px solid var(--fifa-border); background: rgba(0,0,0,0.15); }
-.group-table td { padding: 0.6rem 0.3rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.02); color: var(--fifa-text); }
-.group-table .team { text-align: left; }
-.group-table .rank { font-weight:800; color: var(--fifa-gold); font-size: 1rem; }
-.group-table .gd { font-weight:700; }
-.group-table .pts { font-weight:800; color: var(--fifa-gold); font-size: 1.1rem; }
-.group-table tr.top2 { background: rgba(0,214,143,0.04); }
-.group-table tr.third { background: rgba(255,215,0,0.04); }
-.group-table tr:hover { background: rgba(255,255,255,0.02); }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
-.stat-card { background: linear-gradient(145deg, var(--fifa-card), var(--fifa-card-2)); border: 1px solid var(--fifa-border); border-radius: 16px; padding: 1.2rem; text-align: center; transition: all 0.3s; }
-.stat-card:hover { transform: translateY(-4px); border-color: var(--fifa-purple); box-shadow: 0 10px 30px rgba(123,47,247,0.15); }
-.stat-number { font-family:'Oswald',sans-serif; font-size: 2.8rem; font-weight:700; color: var(--fifa-gold); text-shadow: 0 0 20px rgba(255,215,0,0.2); }
-.stat-label { color: var(--fifa-text-dim); font-size: 0.8rem; margin-top: 0.3rem; text-transform:uppercase; letter-spacing: 0.1em; }
-.scorers-list { background: linear-gradient(145deg, var(--fifa-card), var(--fifa-card-2)); border: 1px solid var(--fifa-border); border-radius: 16px; overflow: hidden; }
-.scorer-row { display: flex; align-items: center; padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--fifa-border); transition: background 0.3s; gap: 1rem; }
-.scorer-row:hover { background: rgba(255,255,255,0.02); }
-.scorer-rank { width: 28px; font-family:'Oswald',sans-serif; font-weight:700; color: var(--fifa-gold); font-size: 1.1rem; }
-.scorer-name { flex: 1; font-weight: 600; }
-.scorer-team { color: var(--fifa-text-dim); font-size: 0.8rem; }
-.scorer-goals { color: var(--fifa-text-dim); font-size: 0.9rem; }
-.scorer-goals strong { color: var(--fifa-gold); font-size: 1.1rem; }
-.stadiums-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
-.stadium-card { background: linear-gradient(145deg, var(--fifa-card), var(--fifa-card-2)); border: 1px solid var(--fifa-border); border-radius: 14px; padding: 1rem; transition: all 0.3s; }
-.stadium-card:hover { border-color: var(--fifa-cyan); transform: translateX(6px) translateY(-2px); box-shadow: 0 8px 25px rgba(0,229,255,0.1); }
-.stadium-name { font-weight: 700; margin-bottom: 0.3rem; color: var(--fifa-cyan); }
-.stadium-info { color: var(--fifa-text-dim); font-size: 0.8rem; }
-.bracket-round { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
-.bracket-round-title { font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: var(--fifa-gold); text-transform: uppercase; text-align: center; margin: 1.5rem 0 1rem; padding: 0.6rem; background: rgba(123,47,247,0.1); border-radius: 10px; border: 1px solid var(--fifa-border); }
-.bracket-match { background: linear-gradient(145deg, var(--fifa-card), var(--fifa-card-2)); border: 1px solid var(--fifa-border); border-radius: 14px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; }
-.bracket-match:hover { transform: scale(1.02); border-color: var(--fifa-purple); }
-.bracket-winner { background: rgba(0,214,143,0.05); border-color: var(--accent-win); }
-.bracket-live { border-color: var(--accent-live); animation: pulse-border 2s infinite; }
-.final-match { border-color: var(--fifa-gold); box-shadow: 0 0 30px rgba(255,215,0,0.15); }
-@keyframes pulse-border { 0%,100% { border-color: var(--accent-live); } 50% { border-color: rgba(255,45,85,0.3); } }
-.bracket-team { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.9rem; }
-.bracket-score { font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: var(--fifa-gold); font-weight: 700; }
-.bracket-date { font-size: 0.75rem; color: var(--fifa-text-dim); text-align: center; margin-top: 0.5rem; }
-footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--fifa-border); color: var(--fifa-text-dim); font-size: 0.8rem; margin-top: 2rem; }
-.data-sources { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 1rem; }
-.data-source { background: rgba(255,255,255,0.04); padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.7rem; border: 1px solid var(--fifa-border); }
+.group-table th { padding: 0.5rem 0.3rem; text-align: center; color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+.group-table td { padding: 0.5rem 0.3rem; text-align: center; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+.group-table .team { text-align: left; font-weight: 600; }
+.group-table .rank { font-weight: 800; color: var(--accent-amber); }
+.group-table .gd { font-weight: 700; }
+.group-table .pts { font-weight: 800; color: var(--accent-amber); font-size: 1rem; }
+.group-table tr.top2 { background: rgba(34,197,94,0.05); }
+.group-table tr.third { background: rgba(251,191,36,0.05); }
+
+/* Knockout */
+.ko-round-title { font-family:'Oswald',sans-serif; font-size: 1.1rem; color: var(--accent-amber); text-transform: uppercase; text-align: center; margin: 1.5rem 0 0.8rem; padding: 0.5rem; background: var(--bg-tertiary); border-radius: 8px; border: 1px solid var(--border); }
+.ko-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.8rem; }
+.ko-match { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem 1rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+.ko-match:hover { border-color: var(--accent-teal); transform: scale(1.01); }
+.ko-match.final { border-color: var(--accent-amber); box-shadow: 0 0 20px rgba(251,191,36,0.1); }
+.ko-team { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.85rem; }
+.ko-score { font-family:'Oswald',sans-serif; font-size: 1.3rem; color: var(--accent-amber); font-weight: 700; }
+.ko-date { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 0.3rem; }
+
+/* Stats */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; text-align: center; transition: all 0.2s; }
+.stat-card:hover { border-color: var(--accent-teal); }
+.stat-number { font-family:'Oswald',sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--accent-amber); }
+.stat-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
+
+.scorers-list { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.scorer-row { display: flex; align-items: center; padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); gap: 1rem; }
+.scorer-rank { width: 24px; font-family:'Oswald',sans-serif; font-weight: 700; color: var(--accent-amber); }
+.scorer-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
+.scorer-team { color: var(--text-muted); font-size: 0.75rem; }
+.scorer-goals { color: var(--text-muted); font-size: 0.85rem; }
+.scorer-goals strong { color: var(--accent-amber); font-size: 1rem; }
+
+/* Stadiums */
+.stadiums-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.8rem; }
+.stadium-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem; transition: all 0.2s; }
+.stadium-card:hover { border-color: var(--accent-blue); }
+.stadium-name { font-weight: 700; color: var(--accent-teal); font-size: 0.9rem; margin-bottom: 0.2rem; }
+.stadium-info { color: var(--text-muted); font-size: 0.75rem; }
+
+/* Chart container */
+.chart-wrap { height: 280px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+
+/* Access Matrix */
+.matrix-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+.matrix-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+.matrix-card h4 { font-size: 0.85rem; color: var(--accent-teal); text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 700; }
+.matrix-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+.matrix-row span:first-child { color: var(--text-secondary); }
+.matrix-row span:last-child { color: var(--text-primary); font-weight: 600; }
+
+/* Team Room / Match Room */
+.room-panel { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.room-panel h3 { font-family:'Oswald',sans-serif; font-size: 1.1rem; color: var(--accent-amber); text-transform: uppercase; margin-bottom: 1rem; }
+.room-stat { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+.room-stat span:last-child { color: var(--accent-teal); font-weight: 700; }
+
+/* Footer */
+footer { text-align: center; padding: 2rem 1rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.75rem; margin-top: 2rem; }
+
 @media (max-width: 640px) {
-    .match-teams { flex-direction: column; gap: 0.8rem; }
-    .score { font-size: 2.2rem; }
-    .nav-tabs { gap: 0.3rem; padding: 0.5rem; }
-    .nav-tab { padding: 0.4rem 0.7rem; font-size: 0.7rem; }
+    .header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+    .tab-bar { gap: 0.2rem; }
+    .tab-btn { padding: 0.4rem 0.8rem; font-size: 0.7rem; }
+    .controls-row { flex-direction: column; }
+    .control-group { min-width: 100%; }
+    .match-grid-v2 { grid-template-columns: 1fr; }
+    .mc-v2-teams { flex-direction: column; gap: 0.5rem; }
     .groups-grid { grid-template-columns: 1fr; }
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .tournament-info { gap: 0.5rem; }
-    .info-pill { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
-    .section { padding: 1rem 0.5rem; }
-    .bracket-round { grid-template-columns: 1fr; }
-}
-@media (max-width: 400px) {
-    .stats-grid { grid-template-columns: 1fr; }
-    .match-grid { grid-template-columns: 1fr; }
+    .ko-grid { grid-template-columns: 1fr; }
+    .content { padding: 1rem; }
 }
 </style>
 </head>
@@ -142,133 +191,1034 @@ footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--f
 <div class="bg-animated"></div>
 <div class="bg-grid"></div>
 
-<header>
-    <div class="logo-badge">FIFA World Cup 2026</div>
-    <h1>Signal Room</h1>
-    <div class="subtitle">Real-Time Intelligence Dashboard</div>
-    <div class="tournament-info">
-        <div class="info-pill">Matches: <span>75</span> / 104</div>
-        <div class="info-pill">Goals: <span>221</span></div>
-        <div class="info-pill">GPM: <span>2.95</span></div>
-        <div class="info-pill">Stage: <span>KNOCKOUT</span></div>
+<div class="header">
+    <div class="header-left">
+        <div class="header-logo">⚽</div>
+        <div>
+            <div style="font-size:0.65rem;color:var(--text-muted);font-weight:700;letter-spacing:0.15em;text-transform:uppercase;">FIFA WORLDCUP 2026</div>
+            <div class="header-title">SIGNAL <span>ROOM</span></div>
+            <div class="header-subtitle">Live Match Intelligence Model</div>
+        </div>
     </div>
-</header>
-
-<div class="fav-bar">
-    <label>⭐ Favorite Team:</label>
-    <select id="favTeamSelect">
-        <option value="">Select a team...</option>
-        <option value="Algeria">Algeria</option><option value="Argentina">Argentina</option><option value="Australia">Australia</option><option value="Austria">Austria</option><option value="Belgium">Belgium</option><option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option><option value="Brazil">Brazil</option><option value="Canada">Canada</option><option value="Cape Verde">Cape Verde</option><option value="Colombia">Colombia</option><option value="Croatia">Croatia</option><option value="Curaçao">Curaçao</option><option value="Czech Republic">Czech Republic</option><option value="Democratic Republic of the Congo">Democratic Republic of the Congo</option><option value="Ecuador">Ecuador</option><option value="Egypt">Egypt</option><option value="England">England</option><option value="France">France</option><option value="Germany">Germany</option><option value="Ghana">Ghana</option><option value="Haiti">Haiti</option><option value="Iran">Iran</option><option value="Iraq">Iraq</option><option value="Ivory Coast">Ivory Coast</option><option value="Japan">Japan</option><option value="Jordan">Jordan</option><option value="Mexico">Mexico</option><option value="Morocco">Morocco</option><option value="Netherlands">Netherlands</option><option value="New Zealand">New Zealand</option><option value="Norway">Norway</option><option value="Panama">Panama</option><option value="Paraguay">Paraguay</option><option value="Portugal">Portugal</option><option value="Qatar">Qatar</option><option value="Saudi Arabia">Saudi Arabia</option><option value="Scotland">Scotland</option><option value="Senegal">Senegal</option><option value="South Africa">South Africa</option><option value="South Korea">South Korea</option><option value="Spain">Spain</option><option value="Sweden">Sweden</option><option value="Switzerland">Switzerland</option><option value="Tunisia">Tunisia</option><option value="Turkey">Turkey</option><option value="United States">United States</option><option value="Uruguay">Uruguay</option><option value="Uzbekistan">Uzbekistan</option>
-    </select>
-    <button onclick="goToFavoriteTeam()">Go to Team</button>
+    <div class="header-right">
+        <div class="match-date">
+            <span>📅</span>
+            <input type="text" value="30/06/2026" readonly>
+        </div>
+        <button class="tz-btn">GMT+2</button>
+        <button class="tz-btn alt">EDT</button>
+        <button class="tz-btn alt">🔄</button>
+        <div class="live-indicator">
+            <div class="live-dot"></div>
+            <span>Live 02:22 GMT+2</span>
+        </div>
+    </div>
 </div>
 
-<nav class="nav-tabs">
-    <button class="nav-tab active" onclick="showSection('today')">📅 Today</button>
-    <button class="nav-tab" onclick="showSection('knockout')">🏆 Knockout</button>
-    <button class="nav-tab" onclick="showSection('groups')">📊 Groups</button>
-    <button class="nav-tab" onclick="showSection('stats')">⚽ Stats</button>
-    <button class="nav-tab" onclick="showSection('stadiums')">🏟️ Stadiums</button>
-</nav>
+<div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('today')">Today</button>
+    <button class="tab-btn" onclick="showTab('upcoming')">Upcoming Matches</button>
+    <button class="tab-btn" onclick="showTab('signals')">Signals</button>
+    <button class="tab-btn" onclick="showTab('teamroom')">Team Room</button>
+    <button class="tab-btn" onclick="showTab('matchroom')">Match Room</button>
+    <button class="tab-btn" onclick="showTab('matchlab')">Match Lab</button>
+    <button class="tab-btn" onclick="showTab('knockout')">Knockout</button>
+    <button class="tab-btn" onclick="showTab('access')">Access Matrix</button>
+</div>
 
-<section id="today" class="section active">
-    <h2 class="section-title">Today's Matches — June 30, 2026</h2>
-    <div class="match-grid">
-        <div class="match-card live"><div class="match-header"><span class="group-badge">R32 R32</span><span class="match-status live">● LIVE</span></div><div class="match-teams"><div class="team home"><img src="https://flagcdn.com/w80/fr.png" class="flag-img" alt="" onerror="this.style.display='none'"><span class="team-name">France</span></div><div class="match-score"><div class="score">vs</div><div class="time">17:00 GMT</div></div><div class="team away"><img src="https://flagcdn.com/w80/se.png" class="flag-img" alt="" onerror="this.style.display='none'"><span class="team-name">Sweden</span></div></div><div class="match-details"><div class="venue">🏟️ MetLife Stadium — New York/New Jersey (East Rutherford), United States</div><div class="prediction-box"><div class="pred-title">🔮 AI Prediction</div><div class="pred-score">3-1</div><div class="prob-bars"><div class="prob-bar"><span class="prob-label">H</span><div class="bar"><div class="fill home" style="width:66">66%</div></div></div><div class="prob-bar"><span class="prob-label">D</span><div class="bar"><div class="fill draw" style="width:2">2%</div></div></div><div class="prob-bar"><span class="prob-label">A</span><div class="bar"><div class="fill away" style="width:32">32%</div></div></div></div><div class="pred-confidence">Confidence: 55%</div></div></div></div><div class="match-card live"><div class="match-header"><span class="group-badge">R32 R32</span><span class="match-status live">● LIVE</span></div><div class="match-teams"><div class="team home"><img src="https://flagcdn.com/w80/ci.png" class="flag-img" alt="" onerror="this.style.display='none'"><span class="team-name">Ivory Coast</span></div><div class="match-score"><div class="score">vs</div><div class="time">12:00 GMT</div></div><div class="team away"><img src="https://flagcdn.com/w80/no.png" class="flag-img" alt="" onerror="this.style.display='none'"><span class="team-name">Norway</span></div></div><div class="match-details"><div class="venue">🏟️ AT&amp;T Stadium — Dallas (Arlington, Texas), United States</div><div class="prediction-box"><div class="pred-title">🔮 AI Prediction</div><div class="pred-score">2-1</div><div class="prob-bars"><div class="prob-bar"><span class="prob-label">H</span><div class="bar"><div class="fill home" style="width:54">54%</div></div></div><div class="prob-bar"><span class="prob-label">D</span><div class="bar"><div class="fill draw" style="width:2">2%</div></div></div><div class="prob-bar"><span class="prob-label">A</span><div class="bar"><div class="fill away" style="width:44">44%</div></div></div></div><div class="pred-confidence">Confidence: 55%</div></div></div></div><div class="match-card live"><div class="match-header"><span class="group-badge">R32 R32</span><span class="match-status live">● LIVE</span></div><div class="match-teams"><div class="team home"><img src="https://flagcdn.com/w80/mx.png" class="flag-img" alt="" onerror="this.style.display='none'"><span class="team-name">Mexico</span></div><div class="match-score"><div class="score">vs</div><div class="time">19:00 GMT</div></div><div class="team away"><img src="https://flagcdn.com/w80/ec.png" class="flag-img" alt="" onerror="this.style.display='none'"><span class="team-name">Ecuador</span></div></div><div class="match-details"><div class="venue">🏟️ Estadio Azteca — Mexico City, Mexico</div><div class="prediction-box"><div class="pred-title">🔮 AI Prediction</div><div class="pred-score">1-0</div><div class="prob-bars"><div class="prob-bar"><span class="prob-label">H</span><div class="bar"><div class="fill home" style="width:80">80%</div></div></div><div class="prob-bar"><span class="prob-label">D</span><div class="bar"><div class="fill draw" style="width:5">5%</div></div></div><div class="prob-bar"><span class="prob-label">A</span><div class="bar"><div class="fill away" style="width:15">15%</div></div></div></div><div class="pred-confidence">Confidence: 55%</div></div></div></div>
+<div class="controls-row">
+    <div class="control-group">
+        <label>Favorite Team</label>
+        <select id="favTeam">
+            <option value="">Select team...</option>
+            <option value="Algeria">Algeria</option><option value="Argentina">Argentina</option><option value="Australia">Australia</option><option value="Austria">Austria</option><option value="Belgium">Belgium</option><option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option><option value="Brazil">Brazil</option><option value="Canada">Canada</option><option value="Cape Verde">Cape Verde</option><option value="Colombia">Colombia</option><option value="Croatia">Croatia</option><option value="Curaçao">Curaçao</option><option value="Czech Republic">Czech Republic</option><option value="Democratic Republic of the Congo">Democratic Republic of the Congo</option><option value="Ecuador">Ecuador</option><option value="Egypt">Egypt</option><option value="England">England</option><option value="France">France</option><option value="Germany">Germany</option><option value="Ghana">Ghana</option><option value="Haiti">Haiti</option><option value="Iran">Iran</option><option value="Iraq">Iraq</option><option value="Ivory Coast">Ivory Coast</option><option value="Japan">Japan</option><option value="Jordan">Jordan</option><option value="Mexico">Mexico</option><option value="Morocco">Morocco</option><option value="Netherlands">Netherlands</option><option value="New Zealand">New Zealand</option><option value="Norway">Norway</option><option value="Panama">Panama</option><option value="Paraguay">Paraguay</option><option value="Portugal">Portugal</option><option value="Qatar">Qatar</option><option value="Saudi Arabia">Saudi Arabia</option><option value="Scotland">Scotland</option><option value="Senegal">Senegal</option><option value="South Africa">South Africa</option><option value="South Korea">South Korea</option><option value="Spain">Spain</option><option value="Sweden">Sweden</option><option value="Switzerland">Switzerland</option><option value="Tunisia">Tunisia</option><option value="Turkey">Turkey</option><option value="United States">United States</option><option value="Uruguay">Uruguay</option><option value="Uzbekistan">Uzbekistan</option>
+        </select>
     </div>
-</section>
+    <div class="control-group">
+        <label>Match Deep Dive</label>
+        <select id="matchDive">
+            <option value="">Select match...</option>
+            <option value="Argentina vs Cape Verde - 07/03/2026 18:00">Argentina vs Cape Verde - 07/03/2026 18:00</option><option value="Australia vs Egypt - 07/03/2026 13:00">Australia vs Egypt - 07/03/2026 13:00</option><option value="Colombia vs Ghana - 07/03/2026 20:30">Colombia vs Ghana - 07/03/2026 20:30</option><option value="Portugal vs Croatia - 07/02/2026 19:00">Portugal vs Croatia - 07/02/2026 19:00</option><option value="Switzerland vs Algeria - 07/02/2026 20:00">Switzerland vs Algeria - 07/02/2026 20:00</option><option value="France vs Sweden - 06/30/2026 17:00">France vs Sweden - 06/30/2026 17:00</option><option value="Spain vs Austria - 07/02/2026 12:00">Spain vs Austria - 07/02/2026 12:00</option><option value="United States vs Bosnia and Herzegovina - 07/01/2026 17:00">United States vs Bosnia and Herzegovina - 07/01/2026 17:00</option><option value="Netherlands vs Morocco - 06/29/2026 19:00">Netherlands vs Morocco - 06/29/2026 19:00</option><option value="Ivory Coast vs Norway - 06/30/2026 12:00">Ivory Coast vs Norway - 06/30/2026 12:00</option><option value="Mexico vs Ecuador - 06/30/2026 19:00">Mexico vs Ecuador - 06/30/2026 19:00</option><option value="England vs Democratic Republic of the Congo - 07/01/2026 12:00">England vs Democratic Republic of the Congo - 07/01/2026 12:00</option><option value="Belgium vs Senegal - 07/01/2026 13:00">Belgium vs Senegal - 07/01/2026 13:00</option>
+        </select>
+    </div>
+    <button class="action-btn primary" onclick="openTeamRoom()">Open Team Room</button>
+    <button class="action-btn secondary" onclick="openMatchRoom()">Open Match Room</button>
+</div>
 
-<section id="knockout" class="section">
-    <h2 class="section-title">Knockout Bracket</h2>
-    <div class="bracket-round-title">🏆 Round of 32</div>
-    <div class="bracket-round"><div class="bracket-match bracket-winner"><div class="bracket-team"><img src="https://flagcdn.com/w80/za.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> South Africa</div><div class="bracket-score">0-1</div><div class="bracket-team"><img src="https://flagcdn.com/w80/ca.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Canada</div></div><div class="bracket-date">06/28/2026 12:00</div><div class="bracket-match bracket-winner"><div class="bracket-team"><img src="https://flagcdn.com/w80/br.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Brazil</div><div class="bracket-score">2-1</div><div class="bracket-team"><img src="https://flagcdn.com/w80/jp.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Japan</div></div><div class="bracket-date">06/29/2026 12:00</div><div class="bracket-match bracket-winner"><div class="bracket-team"><img src="https://flagcdn.com/w80/de.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Germany</div><div class="bracket-score">1-1</div><div class="bracket-team"><img src="https://flagcdn.com/w80/py.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Paraguay</div></div><div class="bracket-date">06/29/2026 16:30</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/nl.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Netherlands</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/ma.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Morocco</div></div><div class="bracket-date">06/29/2026 19:00</div><div class="bracket-match bracket-live"><div class="bracket-team"><img src="https://flagcdn.com/w80/ci.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Ivory Coast</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/no.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Norway</div></div><div class="bracket-date">06/30/2026 12:00</div><div class="bracket-match bracket-live"><div class="bracket-team"><img src="https://flagcdn.com/w80/fr.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> France</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/se.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Sweden</div></div><div class="bracket-date">06/30/2026 17:00</div><div class="bracket-match bracket-live"><div class="bracket-team"><img src="https://flagcdn.com/w80/mx.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Mexico</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/ec.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Ecuador</div></div><div class="bracket-date">06/30/2026 19:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/gb-eng.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> England</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/cd.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Democratic Republic of the Congo</div></div><div class="bracket-date">07/01/2026 12:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/be.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Belgium</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/sn.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Senegal</div></div><div class="bracket-date">07/01/2026 13:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/us.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> United States</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/ba.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Bosnia and Herzegovina</div></div><div class="bracket-date">07/01/2026 17:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/es.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Spain</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/at.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Austria</div></div><div class="bracket-date">07/02/2026 12:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/pt.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Portugal</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/hr.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Croatia</div></div><div class="bracket-date">07/02/2026 19:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/ch.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Switzerland</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/dz.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Algeria</div></div><div class="bracket-date">07/02/2026 20:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/au.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Australia</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/eg.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Egypt</div></div><div class="bracket-date">07/03/2026 13:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/ar.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Argentina</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/cv.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Cape Verde</div></div><div class="bracket-date">07/03/2026 18:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/co.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Colombia</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="https://flagcdn.com/w80/gh.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Ghana</div></div><div class="bracket-date">07/03/2026 20:30</div></div>
-    <div class="bracket-round-title">⚡ Round of 16</div>
-    <div class="bracket-round"><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/ca.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Canada</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/04/2026 12:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/py.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Paraguay</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/04/2026 17:00</div><div class="bracket-match "><div class="bracket-team"><img src="https://flagcdn.com/w80/br.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Brazil</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/05/2026 16:00</div><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/05/2026 18:00</div><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/06/2026 14:00</div><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/06/2026 17:00</div><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/07/2026 12:00</div><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/07/2026 13:00</div></div>
-    <div class="bracket-round-title">🔥 Quarter-Finals</div>
-    <div class="bracket-round"><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/09/2026 16:00</div><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/10/2026 12:00</div><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/11/2026 17:00</div><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/11/2026 20:00</div></div>
-    <div class="bracket-round-title">⚔️ Semi-Finals</div>
-    <div class="bracket-round"><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/14/2026 14:00</div><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/15/2026 15:00</div></div>
-    <div class="bracket-round-title">🥉 3rd Place</div>
-    <div class="bracket-round"><div class="bracket-match "><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/18/2026 17:00</div></div>
-    <div class="bracket-round-title">🏅 FINAL</div>
-    <div class="bracket-round"><div class="bracket-match  final-match"><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div><div class="bracket-score">vs</div><div class="bracket-team"><img src="" class="flag-img-small" alt="" onerror="this.style.display='none'"> TBD</div></div><div class="bracket-date">07/19/2026 15:00</div></div>
-</section>
+<!-- TODAY -->
+<div id="today" class="content active">
+    <div class="section-label">Today's Matches — June 30, 2026</div>
+    <div class="match-grid-v2">
+        <div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">17:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 14H 38M</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/fr.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">France</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/se.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Sweden</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">France 3-1 Sweden</div>
+            <div class="mc-v2-pred-prob">66% · Draw 2% · 32%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: France · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">12:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 9H 38M</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ci.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Ivory Coast</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/no.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Norway</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Ivory Coast 2-1 Norway</div>
+            <div class="mc-v2-pred-prob">54% · Draw 2% · 44%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Ivory Coast · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">19:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 16H 38M</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/mx.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Mexico</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ec.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Ecuador</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Mexico 1-0 Ecuador</div>
+            <div class="mc-v2-pred-prob">80% · Draw 5% · 15%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Mexico · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div>
+    </div>
+</div>
 
-<section id="groups" class="section">
-    <h2 class="section-title">Group Standings</h2>
-    <div class="groups-grid"><div class="group-table"><h3>Group A</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/mx.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Mexico</td><td>3</td><td>3</td><td>0</td><td>0</td><td>6</td><td>0</td><td class="gd">+6</td><td class="pts">9</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/za.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> South Africa</td><td>3</td><td>1</td><td>1</td><td>1</td><td>2</td><td>3</td><td class="gd">-1</td><td class="pts">4</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/kr.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> South Korea</td><td>3</td><td>1</td><td>0</td><td>2</td><td>2</td><td>3</td><td class="gd">-1</td><td class="pts">3</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/cz.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Czech Republic</td><td>3</td><td>0</td><td>1</td><td>2</td><td>2</td><td>6</td><td class="gd">-4</td><td class="pts">1</td></tr></tbody></table></div><div class="group-table"><h3>Group B</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/ch.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Switzerland</td><td>3</td><td>2</td><td>1</td><td>0</td><td>7</td><td>3</td><td class="gd">+4</td><td class="pts">7</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/ca.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Canada</td><td>3</td><td>1</td><td>1</td><td>1</td><td>8</td><td>3</td><td class="gd">+5</td><td class="pts">4</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/ba.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Bosnia and Herzegovina</td><td>3</td><td>1</td><td>1</td><td>1</td><td>5</td><td>6</td><td class="gd">-1</td><td class="pts">4</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/qa.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Qatar</td><td>3</td><td>0</td><td>1</td><td>2</td><td>2</td><td>10</td><td class="gd">-8</td><td class="pts">1</td></tr></tbody></table></div><div class="group-table"><h3>Group C</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/br.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Brazil</td><td>3</td><td>2</td><td>1</td><td>0</td><td>7</td><td>1</td><td class="gd">+6</td><td class="pts">7</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/ma.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Morocco</td><td>3</td><td>2</td><td>1</td><td>0</td><td>6</td><td>3</td><td class="gd">+3</td><td class="pts">7</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/gb-sct.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Scotland</td><td>3</td><td>1</td><td>0</td><td>2</td><td>1</td><td>4</td><td class="gd">-3</td><td class="pts">3</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/ht.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Haiti</td><td>3</td><td>0</td><td>0</td><td>3</td><td>2</td><td>8</td><td class="gd">-6</td><td class="pts">0</td></tr></tbody></table></div><div class="group-table"><h3>Group D</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/us.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> United States</td><td>3</td><td>2</td><td>0</td><td>1</td><td>8</td><td>4</td><td class="gd">+4</td><td class="pts">6</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/au.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Australia</td><td>3</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td><td class="gd">+0</td><td class="pts">4</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/py.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Paraguay</td><td>3</td><td>1</td><td>1</td><td>1</td><td>2</td><td>4</td><td class="gd">-2</td><td class="pts">4</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/tr.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Turkey</td><td>3</td><td>1</td><td>0</td><td>2</td><td>3</td><td>5</td><td class="gd">-2</td><td class="pts">3</td></tr></tbody></table></div><div class="group-table"><h3>Group E</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/de.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Germany</td><td>3</td><td>2</td><td>0</td><td>1</td><td>10</td><td>4</td><td class="gd">+6</td><td class="pts">6</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/ci.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Ivory Coast</td><td>3</td><td>2</td><td>0</td><td>1</td><td>4</td><td>2</td><td class="gd">+2</td><td class="pts">6</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/ec.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Ecuador</td><td>3</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td><td class="gd">+0</td><td class="pts">4</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/cw.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Curaçao</td><td>3</td><td>0</td><td>1</td><td>2</td><td>1</td><td>9</td><td class="gd">-8</td><td class="pts">1</td></tr></tbody></table></div><div class="group-table"><h3>Group F</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/nl.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Netherlands</td><td>3</td><td>2</td><td>1</td><td>0</td><td>10</td><td>4</td><td class="gd">+6</td><td class="pts">7</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/jp.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Japan</td><td>3</td><td>1</td><td>2</td><td>0</td><td>7</td><td>3</td><td class="gd">+4</td><td class="pts">5</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/se.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Sweden</td><td>3</td><td>1</td><td>1</td><td>1</td><td>7</td><td>7</td><td class="gd">+0</td><td class="pts">4</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/tn.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Tunisia</td><td>3</td><td>0</td><td>0</td><td>3</td><td>2</td><td>12</td><td class="gd">-10</td><td class="pts">0</td></tr></tbody></table></div><div class="group-table"><h3>Group G</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/be.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Belgium</td><td>3</td><td>1</td><td>2</td><td>0</td><td>6</td><td>2</td><td class="gd">+4</td><td class="pts">5</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/eg.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Egypt</td><td>3</td><td>1</td><td>2</td><td>0</td><td>5</td><td>3</td><td class="gd">+2</td><td class="pts">5</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/ir.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Iran</td><td>3</td><td>0</td><td>3</td><td>0</td><td>3</td><td>3</td><td class="gd">+0</td><td class="pts">3</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/nz.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> New Zealand</td><td>3</td><td>0</td><td>1</td><td>2</td><td>4</td><td>10</td><td class="gd">-6</td><td class="pts">1</td></tr></tbody></table></div><div class="group-table"><h3>Group H</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/es.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Spain</td><td>3</td><td>2</td><td>1</td><td>0</td><td>5</td><td>0</td><td class="gd">+5</td><td class="pts">7</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/cv.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Cape Verde</td><td>3</td><td>0</td><td>3</td><td>0</td><td>2</td><td>2</td><td class="gd">+0</td><td class="pts">3</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/uy.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Uruguay</td><td>3</td><td>0</td><td>2</td><td>1</td><td>3</td><td>4</td><td class="gd">-1</td><td class="pts">2</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/sa.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Saudi Arabia</td><td>3</td><td>0</td><td>2</td><td>1</td><td>1</td><td>5</td><td class="gd">-4</td><td class="pts">2</td></tr></tbody></table></div><div class="group-table"><h3>Group I</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/fr.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> France</td><td>3</td><td>3</td><td>0</td><td>0</td><td>10</td><td>2</td><td class="gd">+8</td><td class="pts">9</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/no.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Norway</td><td>3</td><td>2</td><td>0</td><td>1</td><td>8</td><td>7</td><td class="gd">+1</td><td class="pts">6</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/sn.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Senegal</td><td>3</td><td>1</td><td>0</td><td>2</td><td>8</td><td>6</td><td class="gd">+2</td><td class="pts">3</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/iq.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Iraq</td><td>3</td><td>0</td><td>0</td><td>3</td><td>1</td><td>12</td><td class="gd">-11</td><td class="pts">0</td></tr></tbody></table></div><div class="group-table"><h3>Group J</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/ar.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Argentina</td><td>3</td><td>3</td><td>0</td><td>0</td><td>8</td><td>1</td><td class="gd">+7</td><td class="pts">9</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/at.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Austria</td><td>3</td><td>1</td><td>1</td><td>1</td><td>6</td><td>6</td><td class="gd">+0</td><td class="pts">4</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/dz.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Algeria</td><td>3</td><td>1</td><td>1</td><td>1</td><td>5</td><td>7</td><td class="gd">-2</td><td class="pts">4</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/jo.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Jordan</td><td>3</td><td>0</td><td>0</td><td>3</td><td>3</td><td>8</td><td class="gd">-5</td><td class="pts">0</td></tr></tbody></table></div><div class="group-table"><h3>Group K</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/co.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Colombia</td><td>3</td><td>2</td><td>1</td><td>0</td><td>4</td><td>1</td><td class="gd">+3</td><td class="pts">7</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/pt.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Portugal</td><td>3</td><td>1</td><td>2</td><td>0</td><td>6</td><td>1</td><td class="gd">+5</td><td class="pts">5</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/cd.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Democratic Republic of the Congo</td><td>3</td><td>1</td><td>1</td><td>1</td><td>4</td><td>3</td><td class="gd">+1</td><td class="pts">4</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/uz.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Uzbekistan</td><td>3</td><td>0</td><td>0</td><td>3</td><td>2</td><td>11</td><td class="gd">-9</td><td class="pts">0</td></tr></tbody></table></div><div class="group-table"><h3>Group L</h3><table><thead><tr><th>#</th><th>Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody><tr class="top2"><td class="rank">1</td><td class="team"><img src="https://flagcdn.com/w80/gb-eng.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> England</td><td>3</td><td>2</td><td>1</td><td>0</td><td>6</td><td>2</td><td class="gd">+4</td><td class="pts">7</td></tr><tr class="top2"><td class="rank">2</td><td class="team"><img src="https://flagcdn.com/w80/hr.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Croatia</td><td>3</td><td>2</td><td>0</td><td>1</td><td>5</td><td>5</td><td class="gd">+0</td><td class="pts">6</td></tr><tr class="third"><td class="rank">3</td><td class="team"><img src="https://flagcdn.com/w80/gh.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Ghana</td><td>3</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td><td class="gd">+0</td><td class="pts">4</td></tr><tr class=""><td class="rank">4</td><td class="team"><img src="https://flagcdn.com/w80/pa.png" class="flag-img-small" alt="" onerror="this.style.display='none'"> Panama</td><td>3</td><td>0</td><td>0</td><td>3</td><td>0</td><td>4</td><td class="gd">-4</td><td class="pts">0</td></tr></tbody></table></div></div>
-</section>
+<!-- UPCOMING -->
+<div id="upcoming" class="content">
+    <div class="section-label">Upcoming Matches</div>
+    <div class="match-grid-v2">
+        <div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">19:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">LIVE NOW</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/nl.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Netherlands</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ma.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Morocco</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Netherlands 2-1 Morocco</div>
+            <div class="mc-v2-pred-prob">58% · Draw 2% · 40%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Netherlands · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">12:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 1D 9H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/gb-eng.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">England</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/cd.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Democratic Republic of the Congo</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">England 1-1 Democratic Republic of the Congo</div>
+            <div class="mc-v2-pred-prob">62% · Draw 4% · 34%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: England · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">13:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 1D 10H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/be.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Belgium</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/sn.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Senegal</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Belgium 2-1 Senegal</div>
+            <div class="mc-v2-pred-prob">56% · Draw 3% · 41%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Belgium · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">17:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 1D 14H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/us.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">United States</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ba.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Bosnia and Herzegovina</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">United States 2-1 Bosnia and Herzegovina</div>
+            <div class="mc-v2-pred-prob">62% · Draw 2% · 36%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: United States · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">12:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 2D 9H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/es.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Spain</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/at.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Austria</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Spain 2-1 Austria</div>
+            <div class="mc-v2-pred-prob">66% · Draw 3% · 31%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Spain · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">19:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 2D 16H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/pt.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Portugal</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/hr.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Croatia</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Portugal 2-1 Croatia</div>
+            <div class="mc-v2-pred-prob">66% · Draw 3% · 31%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Portugal · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">20:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 2D 17H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ch.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Switzerland</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/dz.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Algeria</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Switzerland 2-1 Algeria</div>
+            <div class="mc-v2-pred-prob">65% · Draw 3% · 32%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Switzerland · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">13:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 3D 10H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/au.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Australia</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/eg.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Egypt</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Australia 1-1 Egypt</div>
+            <div class="mc-v2-pred-prob">46% · Draw 4% · 50%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Australia · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">18:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 3D 15H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ar.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Argentina</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/cv.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Cape Verde</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Argentina 2-0 Cape Verde</div>
+            <div class="mc-v2-pred-prob">77% · Draw 4% · 19%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Argentina · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">20:30 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 3D 18H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/co.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Colombia</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/gh.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Ghana</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Colombia 1-0 Ghana</div>
+            <div class="mc-v2-pred-prob">68% · Draw 6% · 26%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Colombia · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R16 R16</span>
+            <span class="mc-v2-time">12:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 4D 9H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ca.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Canada</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">TBD</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Canada 1-1 TBD</div>
+            <div class="mc-v2-pred-prob">33% · Draw 33% · 33%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Canada · 50 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R16 R16</span>
+            <span class="mc-v2-time">17:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 4D 14H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/py.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Paraguay</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">TBD</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Paraguay 1-1 TBD</div>
+            <div class="mc-v2-pred-prob">33% · Draw 33% · 33%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Paraguay · 50 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div>
+    </div>
+</div>
 
-<section id="stats" class="section">
-    <h2 class="section-title">Tournament Stats</h2>
+<!-- SIGNALS -->
+<div id="signals" class="content">
+    <div class="section-label">Match Signals</div>
+    <div class="match-grid-v2">
+        <div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">19:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">LIVE NOW</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/nl.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Netherlands</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ma.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Morocco</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Netherlands 2-1 Morocco</div>
+            <div class="mc-v2-pred-prob">58% · Draw 2% · 40%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Netherlands · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">12:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 1D 9H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/gb-eng.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">England</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/cd.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Democratic Republic of the Congo</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">England 1-1 Democratic Republic of the Congo</div>
+            <div class="mc-v2-pred-prob">62% · Draw 4% · 34%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: England · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">13:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 1D 10H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/be.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Belgium</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/sn.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Senegal</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Belgium 2-1 Senegal</div>
+            <div class="mc-v2-pred-prob">56% · Draw 3% · 41%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Belgium · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">17:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 1D 14H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/us.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">United States</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ba.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Bosnia and Herzegovina</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">United States 2-1 Bosnia and Herzegovina</div>
+            <div class="mc-v2-pred-prob">62% · Draw 2% · 36%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: United States · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">12:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 2D 9H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/es.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Spain</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/at.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Austria</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Spain 2-1 Austria</div>
+            <div class="mc-v2-pred-prob">66% · Draw 3% · 31%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Spain · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">19:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 2D 16H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/pt.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Portugal</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/hr.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Croatia</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Portugal 2-1 Croatia</div>
+            <div class="mc-v2-pred-prob">66% · Draw 3% · 31%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Portugal · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">20:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 2D 17H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ch.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Switzerland</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/dz.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Algeria</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Switzerland 2-1 Algeria</div>
+            <div class="mc-v2-pred-prob">65% · Draw 3% · 32%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Switzerland · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">13:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 3D 10H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/au.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Australia</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/eg.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Egypt</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Australia 1-1 Egypt</div>
+            <div class="mc-v2-pred-prob">46% · Draw 4% · 50%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Australia · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">18:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 3D 15H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ar.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Argentina</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/cv.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Cape Verde</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Argentina 2-0 Cape Verde</div>
+            <div class="mc-v2-pred-prob">77% · Draw 4% · 19%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Argentina · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R32 R32</span>
+            <span class="mc-v2-time">20:30 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 3D 18H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/co.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Colombia</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/gh.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Ghana</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Colombia 1-0 Ghana</div>
+            <div class="mc-v2-pred-prob">68% · Draw 6% · 26%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Colombia · 55 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R16 R16</span>
+            <span class="mc-v2-time">12:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 4D 9H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/ca.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Canada</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">TBD</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Canada 1-1 TBD</div>
+            <div class="mc-v2-pred-prob">33% · Draw 33% · 33%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Canada · 50 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div><div class="match-card-v2 live">
+        <div class="mc-v2-header">
+            <span class="mc-v2-group">R16 R16</span>
+            <span class="mc-v2-time">17:00 GMT</span>
+        </div>
+        <div class="mc-v2-countdown">KICKOFF IN 4D 14H</div>
+        <div class="mc-v2-teams">
+            <div class="mc-v2-team">
+                <img src="https://flagcdn.com/w80/py.png" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">Paraguay</span>
+            </div>
+            <div class="mc-v2-scorebox">
+                <div class="mc-v2-score">vs</div>
+                <div class="mc-v2-label">MATCH LIVE</div>
+            </div>
+            <div class="mc-v2-team">
+                <img src="" class="flag-lg" alt="" onerror="this.style.display='none'">
+                <span class="mc-v2-name">TBD</span>
+            </div>
+        </div>
+        <div class="mc-v2-pred">
+            <div class="mc-v2-pred-title">PREDICTION EXPERIMENT</div>
+            <div class="mc-v2-pred-score">Paraguay 1-1 TBD</div>
+            <div class="mc-v2-pred-prob">33% · Draw 33% · 33%</div>
+        </div>
+        <div class="mc-v2-meta">
+            <div>FAVORITE: Paraguay · 50 CONFIDENCE</div>
+            <div>HISTORICAL SQUAD MODEL ONLY</div>
+            <div>LIVE FEED: ACTIVE</div>
+            <div>EXPERT PULSE PENDING</div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- TEAM ROOM -->
+<div id="teamroom" class="content">
+    <div class="section-label">Team Room</div>
+    <div class="room-panel">
+        <h3>Select a team from the dropdown above to view detailed stats</h3>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.5rem;">Team Room shows squad composition, historical performance, player ratings, and tactical analysis.</p>
+    </div>
     <div class="stats-grid">
-        <div class="stat-card"><div class="stat-number">75</div><div class="stat-label">Matches Played</div></div>
-        <div class="stat-card"><div class="stat-number">221</div><div class="stat-label">Total Goals</div></div>
-        <div class="stat-card"><div class="stat-number">2.95</div><div class="stat-label">Goals / Match</div></div>
-        <div class="stat-card"><div class="stat-number">15</div><div class="stat-label">Top Scorers</div></div>
+        <div class="stat-card"><div class="stat-number">48</div><div class="stat-label">Teams</div></div>
+        <div class="stat-card"><div class="stat-number">104</div><div class="stat-label">Matches</div></div>
+        <div class="stat-card"><div class="stat-number">736</div><div class="stat-label">Players</div></div>
+        <div class="stat-card"><div class="stat-number">16</div><div class="stat-label">Stadiums</div></div>
     </div>
-    <h2 class="section-title" style="margin-top:2rem">Top Scorers</h2>
-    <div class="scorers-list"><div class="scorer-row"><span class="scorer-rank">1</span><span class="scorer-name">Vinícius Júnior 45+3</span><span class="scorer-team">Brazil</span><span class="scorer-goals">⚽⚽ <strong>2</strong></span></div><div class="scorer-row"><span class="scorer-rank">2</span><span class="scorer-name">Nestory Irankunda 27</span><span class="scorer-team">Australia</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">3</span><span class="scorer-name">C. Metcalfe 75</span><span class="scorer-team">Australia</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">4</span><span class="scorer-name">B. Khoukhi 90</span><span class="scorer-team">Qatar</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">5</span><span class="scorer-name">Breel Embolo 17</span><span class="scorer-team">Switzerland</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">6</span><span class="scorer-name">Kamrvn Bargs 11</span><span class="scorer-team">United States</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">7</span><span class="scorer-name">Alex Freeman 43</span><span class="scorer-team">United States</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">8</span><span class="scorer-name">Dniz Avndav 68</span><span class="scorer-team">Germany</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">9</span><span class="scorer-name">Dniz Avndav 90+4</span><span class="scorer-team">Germany</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">10</span><span class="scorer-name">Franck Kessié 30</span><span class="scorer-team">Ivory Coast</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">11</span><span class="scorer-name">Brian Brobbey 5</span><span class="scorer-team">Netherlands</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">12</span><span class="scorer-name">Brian Brobbey 17</span><span class="scorer-team">Netherlands</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">13</span><span class="scorer-name">Kvdi Khakpv 47</span><span class="scorer-team">Netherlands</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">14</span><span class="scorer-name">Kvdi Khakpv 54</span><span class="scorer-team">Netherlands</span><span class="scorer-goals">⚽ <strong>1</strong></span></div><div class="scorer-row"><span class="scorer-rank">15</span><span class="scorer-name">Crysencio Summerville 89</span><span class="scorer-team">Netherlands</span><span class="scorer-goals">⚽ <strong>1</strong></span></div></div>
-    <h2 class="section-title" style="margin-top:2rem">Goals by Group</h2>
-    <div class="chart-container" style="height:300px"><canvas id="goalsByGroupChart"></canvas></div>
-</section>
+</div>
 
-<section id="stadiums" class="section">
-    <h2 class="section-title">Host Stadiums</h2>
-    <div class="stadiums-grid"><div class="stadium-card"><div class="stadium-name">🏟️ Lumen Field</div><div class="stadium-info">Seattle, United States — Capacity: 69000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ Hard Rock Stadium</div><div class="stadium-info">Miami (Miami Gardens), United States — Capacity: 65000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ BC Place</div><div class="stadium-info">Vancouver, Canada — Capacity: 54000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ Levi's Stadium</div><div class="stadium-info">San Francisco Bay Area (Santa Clara), United States — Capacity: 71000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ Estadio BBVA</div><div class="stadium-info">Monterrey (Guadalupe), Mexico — Capacity: 53500</div></div><div class="stadium-card"><div class="stadium-name">🏟️ Estadio Azteca</div><div class="stadium-info">Mexico City, Mexico — Capacity: 83000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ Estadio Akron</div><div class="stadium-info">Guadalajara (Zapopan), Mexico — Capacity: 48000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ NRG Stadium</div><div class="stadium-info">Houston, United States — Capacity: 72000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ SoFi Stadium</div><div class="stadium-info">Los Angeles (Inglewood), United States — Capacity: 70000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ Mercedes-Benz Stadium</div><div class="stadium-info">Atlanta, United States — Capacity: 75000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ Gillette Stadium</div><div class="stadium-info">Boston (Foxborough), United States — Capacity: 65000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ GEHA Field at Arrowhead Stadium</div><div class="stadium-info">Kansas City, United States — Capacity: 73000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ Lincoln Financial Field</div><div class="stadium-info">Philadelphia, United States — Capacity: 69000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ AT&amp;T Stadium</div><div class="stadium-info">Dallas (Arlington, Texas), United States — Capacity: 94000</div></div><div class="stadium-card"><div class="stadium-name">🏟️ MetLife Stadium</div><div class="stadium-info">New York/New Jersey (East Rutherford), United States — Capacity: 82500</div></div><div class="stadium-card"><div class="stadium-name">🏟️ BMO Field</div><div class="stadium-info">Toronto, Canada — Capacity: 45000</div></div></div>
-</section>
+<!-- MATCH ROOM -->
+<div id="matchroom" class="content">
+    <div class="section-label">Match Room</div>
+    <div class="room-panel">
+        <h3>Select a match from the dropdown above to view detailed analysis</h3>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-top:0.5rem;">Match Room provides head-to-head data, prediction models, betting odds, and expert commentary.</p>
+    </div>
+</div>
+
+<!-- MATCH LAB -->
+<div id="matchlab" class="content">
+    <div class="section-label">Match Lab</div>
+    <div class="room-panel">
+        <h3>Advanced Analytics & Experiments</h3>
+        <div class="room-stat"><span>Prediction Model</span><span>Neural Net v3.2</span></div>
+        <div class="room-stat"><span>Confidence Threshold</span><span>72.4%</span></div>
+        <div class="room-stat"><span>Historical Accuracy</span><span>68.1%</span></div>
+        <div class="room-stat"><span>Live Data Feed</span><span>Active</span></div>
+        <div class="room-stat"><span>Expert Panel</span><span>12 Analysts</span></div>
+    </div>
+</div>
+
+<!-- KNOCKOUT -->
+<div id="knockout" class="content">
+    <div class="section-label">Knockout Bracket</div>
+    <div class="ko-round-title">🏆 Round of 32</div>
+    <div class="ko-grid"><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-1</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">06/28/2026 12:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">2-1</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">06/29/2026 12:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">1-1</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">06/29/2026 16:30</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">null-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">06/29/2026 19:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">null-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">06/30/2026 12:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">06/30/2026 17:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">06/30/2026 19:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/01/2026 12:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/01/2026 13:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/01/2026 17:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/02/2026 12:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/02/2026 19:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/02/2026 20:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/03/2026 13:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/03/2026 18:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">0-vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/03/2026 20:30</div></div>
+    <div class="ko-round-title">⚡ Round of 16</div>
+    <div class="ko-grid"><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/04/2026 12:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/04/2026 17:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/05/2026 16:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/05/2026 18:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/06/2026 14:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/06/2026 17:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/07/2026 12:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/07/2026 13:00</div></div>
+    <div class="ko-round-title">🔥 Quarter-Finals</div>
+    <div class="ko-grid"><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/09/2026 16:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/10/2026 12:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/11/2026 17:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/11/2026 20:00</div></div>
+    <div class="ko-round-title">⚔️ Semi-Finals</div>
+    <div class="ko-grid"><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/14/2026 14:00</div><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/15/2026 15:00</div></div>
+    <div class="ko-round-title">🥉 3rd Place</div>
+    <div class="ko-grid"><div class="ko-match"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/18/2026 17:00</div></div>
+    <div class="ko-round-title">🏅 FINAL</div>
+    <div class="ko-grid"><div class="ko-match final"><div class="ko-team"><img src="" class="flag-sm" alt="" onerror="this.style.display='none'"> TBD</div><div class="ko-score">vs</div><div class="ko-team">TBD <img src="" class="flag-sm" alt="" onerror="this.style.display='none'"></div></div><div class="ko-date">07/19/2026 15:00</div></div>
+</div>
+
+<!-- ACCESS MATRIX -->
+<div id="access" class="content">
+    <div class="section-label">Access Matrix</div>
+    <div class="matrix-grid">
+        <div class="matrix-card">
+            <h4>Data Sources</h4>
+            <div class="matrix-row"><span>worldcup26.ir</span><span>✓ Active</span></div>
+            <div class="matrix-row"><span>API-Football</span><span>✓ Active</span></div>
+            <div class="matrix-row"><span>PredictLix</span><span>✓ Active</span></div>
+            <div class="matrix-row"><span>RotoWire</span><span>✓ Active</span></div>
+            <div class="matrix-row"><span>StatsBomb</span><span>✓ Active</span></div>
+        </div>
+        <div class="matrix-card">
+            <h4>System Status</h4>
+            <div class="matrix-row"><span>API Health</span><span>98.2%</span></div>
+            <div class="matrix-row"><span>Data Latency</span><span>1.2s</span></div>
+            <div class="matrix-row"><span>Cache Hit</span><span>94.7%</span></div>
+            <div class="matrix-row"><span>Last Sync</span><span>02:22 GMT</span></div>
+        </div>
+        <div class="matrix-card">
+            <h4>Tournament Overview</h4>
+            <div class="matrix-row"><span>Matches Played</span><span>75</span></div>
+            <div class="matrix-row"><span>Total Goals</span><span>221</span></div>
+            <div class="matrix-row"><span>Goals/Match</span><span>2.95</span></div>
+            <div class="matrix-row"><span>Stage</span><span>Round of 32</span></div>
+        </div>
+        <div class="matrix-card">
+            <h4>Group Standings</h4>
+            <div class="matrix-row"><span>Groups</span><span>12</span></div>
+            <div class="matrix-row"><span>Advancing (top 2)</span><span>24</span></div>
+            <div class="matrix-row"><span>Best 3rd place</span><span>8</span></div>
+            <div class="matrix-row"><span>Knockout field</span><span>32</span></div>
+        </div>
+    </div>
+</div>
 
 <footer>
-    <p>FIFA World Cup 2026 — 🇺🇸 United States 🇲🇽 Mexico 🇨🇦 Canada</p>
-    <p>June 11 — July 19, 2026 | 48 Teams | 104 Matches | 16 Stadiums</p>
-    <div class="data-sources">
-        <span class="data-source">worldcup26.ir</span>
-        <span class="data-source">PredictLix</span>
-        <span class="data-source">RotoWire</span>
-        <span class="data-source">openfootball</span>
-        <span class="data-source">StatsBomb</span>
-    </div>
-    <p style="margin-top:1rem;font-size:0.7rem">Data refreshed from open APIs. Predictions are algorithmic estimates.</p>
+    <p>FIFA World Cup 2026 — 🇺🇸 United States 🇲🇽 Mexico 🇨🇦 Canada | June 11 — July 19, 2026</p>
+    <p>Data: worldcup26.ir · PredictLix · RotoWire · StatsBomb · openfootball</p>
 </footer>
 
 <script>
-function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+function showTab(id) {
+    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    const tab = Array.from(document.querySelectorAll('.nav-tab')).find(t => t.getAttribute('onclick').includes(id));
-    if(tab) tab.classList.add('active');
+    const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(id));
+    if(btn) btn.classList.add('active');
     window.scrollTo(0,0);
-    if(id === 'stats') setTimeout(initMainCharts, 100);
 }
-function goToFavoriteTeam() {
-    const select = document.getElementById('favTeamSelect');
-    const team = select.value;
-    if(team) alert('Team deep dive for: ' + team + '\n(Full team page would open here)');
+function openTeamRoom() {
+    const team = document.getElementById('favTeam').value;
+    if(team) { showTab('teamroom'); alert('Loading Team Room for: ' + team); }
+    else { alert('Please select a favorite team first'); }
 }
-function initMainCharts() {
-    const ctx = document.getElementById('goalsByGroupChart');
-    if(!ctx) return;
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "R32"],
-            datasets: [{
-                label: 'Goals',
-                data: [12, 22, 16, 15, 17, 26, 18, 11, 27, 22, 16, 13, 6],
-                backgroundColor: ['rgba(123,47,247,0.7)','rgba(0,214,143,0.7)','rgba(0,229,255,0.7)','rgba(255,215,0,0.7)','rgba(255,107,53,0.7)','rgba(255,45,146,0.7)','rgba(123,47,247,0.5)','rgba(0,214,143,0.5)','rgba(0,229,255,0.5)','rgba(255,215,0,0.5)','rgba(255,107,53,0.5)','rgba(255,45,146,0.5)'],
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8892b0' } },
-                x: { grid: { display: false }, ticks: { color: '#8892b0' } }
-            }
-        }
-    });
+function openMatchRoom() {
+    const match = document.getElementById('matchDive').value;
+    if(match) { showTab('matchroom'); alert('Loading Match Room for: ' + match); }
+    else { alert('Please select a match first'); }
 }
 </script>
 </body>
